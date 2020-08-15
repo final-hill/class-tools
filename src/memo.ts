@@ -12,8 +12,8 @@ const assert: Contracts['assert'] = new Contracts(true).assert;
 /**
   * Caches the associated class feature's return value.
   * @param {object | Function} target - The constructor of the class if applied to a static member. Otherwise the prototype
-  * @param {PropertyKey} _propertyKey - The name of the memebr
-  * @param {PropertyDecorator} descriptor - The property descriptor of the cleass feature
+  * @param {PropertyKey} _propertyKey - The name of the member
+  * @param {PropertyDecorator} descriptor - The property descriptor of the class feature
   */
 function memo(
     target: any, _propertyKey: PropertyKey, descriptor: PropertyDescriptor
@@ -33,24 +33,38 @@ function memo(
             `@memo: argument count can not vary. Expected ${argCount} received: ${args.length}`
         );
 
-        const cached = args.reduce<Map<any, any> | any>(((cacheOrResult, arg) =>
-            cacheOrResult?.has(arg) == true ? cacheOrResult.get(arg)! : noEntry
-        ), cache);
+        let cached;
+        if(argCount === 0) {
+            cached = cache.has(null) ? cache.get(null) : noEntry;
+        } else {
+            cached = args.reduce<Map<any, any> | any>(((cacheOrResult, arg) =>
+                cacheOrResult?.has(arg) == true ? cacheOrResult.get(arg)! : noEntry
+            ), cache);
+        }
 
         if (cached !== noEntry) {
             return cached;
         } else {
-            const newCache: Map<any, any> = args.slice(0, args.length - 1)
-                .reduce((newCache, arg) => {
-                    const newMap = new Map();
-                    newCache.set(arg, newMap);
+            let result;
+            if(argCount === 0) {
+                result = fnOriginal.call(this, ...args);
+                cache.set(null, result);
+            } else if(argCount === 1) {
+                result = fnOriginal.call(this, ...args);
+                cache.set(args[0], result);
+            } else {
+                const newCache: Map<any, any> = args.slice(0, args.length - 1)
+                    .reduce((newCache, arg) => {
+                        const newMap = new Map();
+                        newCache.set(arg, newMap);
 
-                    return newMap;
-                }, cache),
-                fnResult = fnOriginal.call(this, ...args);
-            newCache.set(args[args.length - 1], fnResult);
+                        return newMap;
+                    }, cache),
+                result = fnOriginal.call(this, ...args);
+                newCache.set(args[args.length - 1], result);
+            }
 
-            return fnResult;
+            return result;
         }
     };
 }
