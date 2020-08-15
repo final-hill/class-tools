@@ -13,8 +13,8 @@ const assert: Contracts['assert'] = new Contracts(true).assert;
  * Converts the associated method into a curried method
  *
  * @param {Record<PropertyKey, any> | Function} target - The constructor of the class if applied to a static member. Otherwise the prototype
- * @param {PropertyKey} _propertyKey - The name of the memebr
- * @param {PropertyDecorator} descriptor - The property descriptor of the cleass feature
+ * @param {PropertyKey} _propertyKey - The name of the member
+ * @param {PropertyDecorator} descriptor - The property descriptor of the class feature
  */
 function curry(
     target: Record<PropertyKey, any> | ((...args: any[]) => any), _propertyKey: PropertyKey, descriptor: PropertyDescriptor
@@ -26,10 +26,12 @@ function curry(
      savedArgs: any[] = [];
 
     /**
+     * Accumulates arguments
      *
-     * @param {any[]} moreArgs
-     * @param {any[]} savedArgs
-     * @param {number} n
+     * @param {any[]} moreArgs -
+     * @param {any[]} savedArgs -
+     * @param {number} n -
+     * @returns {any} - Method result, or a curried method
      */
     function accumulator(moreArgs: any[], savedArgs: any[], n: number): any {
         const savedPrev = [...moreArgs],
