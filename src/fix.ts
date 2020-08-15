@@ -8,6 +8,7 @@
 /**
   *
   */
+/*
 function fix(
     target: any, _propertyKey: PropertyKey, descriptor: PropertyDescriptor
 ): void {
@@ -15,3 +16,4 @@ function fix(
 }
 
 export default fix;
+*/
