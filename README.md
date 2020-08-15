@@ -8,8 +8,8 @@
 
 ## Introduction
 
-This library provides a number of utility functions and decorators
-to ease of features commonly found in functional languages.
+This library provides a number of utility decorators to enable the use of
+features commonly found in functional languages for use with classes.
 
 ## Library Installation
 
