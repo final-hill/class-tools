@@ -19,36 +19,29 @@ const assert: Contracts['assert'] = new Contracts(true).assert;
 function curry(
     target: Record<PropertyKey, any> | ((...args: any[]) => any), _propertyKey: PropertyKey, descriptor: PropertyDescriptor
 ): void {
-    assert(typeof typeof descriptor.value == 'function', '@curry can only be applied to methods');
+    assert(typeof descriptor.value == 'function', '@curry can only be applied to methods');
 
-    const originalFn: (...args: any[]) => any = descriptor.value,
-          n = originalFn.length,
-     savedArgs: any[] = [];
+    const _originalFn: (...args: any[]) => any = descriptor.value;
 
     /**
-     * Accumulates arguments
-     *
-     * @param {any[]} moreArgs -
-     * @param {any[]} savedArgs -
-     * @param {number} n -
-     * @returns {any} - Method result, or a curried method
+     * Performs the actual currying
+     * @param {any[]} args - The new arguments
+     * @param {any[]} savedArgs - The arguments thus far
+     * @param {number} remainingCount - The number of arguments expected
+     * @returns {any} - The result or a curried function expecting the remaining arguments
      */
-    function accumulator(moreArgs: any[], savedArgs: any[], n: number): any {
-        const savedPrev = [...moreArgs],
-              nPrev = n;
-        savedArgs.push(...moreArgs);
-        n -= moreArgs.length;
-        if(n - moreArgs.length <= 0) {
-            const result = originalFn.apply(target,savedArgs);
-            [savedArgs, n] = [savedPrev, nPrev];
-
-            return result;
+    function accumulator(args: any[], savedArgs: any[], remainingCount: number): any {
+        assert(args.length <= remainingCount, 'Too many arguments');
+        const newRemainingCount = remainingCount - args.length,
+              newSavedArgs = [...savedArgs, ...args];
+        if(newRemainingCount === 0) {
+            return _originalFn.apply(target, newSavedArgs);
         } else {
-            return (...args: any[]): any => accumulator(args, [...savedArgs], n);
+            return (...args: any[]): any => accumulator(args,newSavedArgs, newRemainingCount);
         }
     }
 
-    descriptor.value = accumulator.call(target, [], savedArgs, n);
+    descriptor.value = accumulator([], [], _originalFn.length);
 }
 
 export default curry;

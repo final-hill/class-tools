@@ -34,6 +34,21 @@ fib.calcMemo(30) // 832040; less than 1ms
 
 ## Currying
 
+```ts
+class Adder {
+    @curry
+    add(a: number, b: number): number {
+        return a + b;
+    }
+}
+
+const adder = new Adder(),
+      addOne = adder.add(1);
+
+addOne(3) // 4
+addOne()(3) // 4
+```
+
 ## Partial Application
 
 ## Fixed-Point
