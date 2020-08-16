@@ -16,8 +16,8 @@ import memo from './memo';
  */
 function measure<T>(fn: (...args: any[]) => T, args: any[]): [T, number] {
     const d1 = Date.now(),
-          result = fn(...args),
-          d2 = Date.now();
+        result = fn(...args),
+        d2 = Date.now();
 
     return [result, d2 - d1];
 }
@@ -31,8 +31,8 @@ function measure<T>(fn: (...args: any[]) => T, args: any[]): [T, number] {
  */
 async function measureAsync<T>(fn: (...args: any[]) => Promise<T>, args: any[]): Promise<[T, number]> {
     const d1 = Date.now(),
-          result = await fn(...args),
-          d2 = Date.now();
+        result = await fn(...args),
+        d2 = Date.now();
 
     return [result, d2 - d1];
 }
@@ -66,8 +66,8 @@ describe('@memo', () => {
         }
 
         const fib = new Fib(),
-              [result, time] = measure(fib.calc.bind(fib), [30]),
-              [result2, time2] = measure(fib.calcMemo.bind(fib), [30]);
+            [result, time] = measure(fib.calc.bind(fib), [30]),
+            [result2, time2] = measure(fib.calcMemo.bind(fib), [30]);
 
         expect(result).toEqual(result2);
         expect(time).toBeGreaterThan(time2);
@@ -93,15 +93,28 @@ describe('@memo', () => {
         await foo.calcMemo();
 
         const [result, time] = await measureAsync(async () => await foo.calc(), []),
-              [result2, time2] = await measureAsync(async () => await foo.calcMemo(), []);
+            [result2, time2] = await measureAsync(async () => await foo.calcMemo(), []);
 
         expect(result).toEqual(result2);
         expect(time).toBeGreaterThan(time2);
     });
-    /*
     test('Multiple args', () => {
-        // TODO
+        class FibDummy {
+            @memo
+            calcMemo(dummy: string, n: number): number {
+                return n < 2 ? n : this.calcMemo(dummy, n - 1) + this.calcMemo(dummy, n - 2);
+            }
+            calc(dummy: string, n: number): number {
+                return n < 2 ? n : this.calc(dummy, n - 1) + this.calc(dummy, n - 2);
+            }
+        }
+
+        const fibDummy = new FibDummy(),
+            [result, time] = measure(fibDummy.calc.bind(fibDummy), ['a', 30]),
+            [result2, time2] = measure(fibDummy.calcMemo.bind(fibDummy), ['a', 30]);
+
+        expect(result).toEqual(result2);
+        expect(time).toBeGreaterThan(time2);
     });
-    */
 });
 

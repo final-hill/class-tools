@@ -38,33 +38,42 @@ function memo(
             cached = cache.has(null) ? cache.get(null) : noEntry;
         } else {
             cached = args.reduce<Map<any, any> | any>(((cacheOrResult, arg) =>
-                cacheOrResult?.has(arg) == true ? cacheOrResult.get(arg)! : noEntry
+                cacheOrResult instanceof Map ?
+                    cacheOrResult.has(arg) ? cacheOrResult.get(arg) : noEntry
+                : cacheOrResult
             ), cache);
         }
 
         if (cached !== noEntry) {
             return cached;
         } else {
-            let result;
             if(argCount === 0) {
-                result = fnOriginal.call(this, ...args);
+                const result = fnOriginal.call(this, ...args);
                 cache.set(null, result);
+
+                return result;
             } else if(argCount === 1) {
-                result = fnOriginal.call(this, ...args);
+                const result = fnOriginal.call(this, ...args);
                 cache.set(args[0], result);
+
+                return result;
             } else {
                 const newCache: Map<any, any> = args.slice(0, args.length - 1)
                     .reduce((newCache, arg) => {
-                        const newMap = new Map();
-                        newCache.set(arg, newMap);
+                        if(newCache.has(arg) === true) {
+                            return newCache.get(arg);
+                        } else {
+                            const newMap = new Map();
+                            newCache.set(arg, newMap);
 
-                        return newMap;
+                            return newMap;
+                        }
                     }, cache),
                 result = fnOriginal.call(this, ...args);
                 newCache.set(args[args.length - 1], result);
-            }
 
-            return result;
+                return result;
+            }
         }
     };
 }

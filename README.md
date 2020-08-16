@@ -17,6 +17,21 @@ features commonly found in functional languages for use with classes.
 
 ## Memoization
 
+```ts
+class Fib {
+    @memo
+    calcMemo(n: number): number {
+        return n < 2 ? n : this.calcMemo(n - 1) + this.calcMemo(n - 2);
+    }
+    calc(n: number): number {
+        return n < 2 ? n : this.calc(n - 1) + this.calc(n - 2);
+    }
+}
+
+fib.calc(30) // 832040; 9ms
+fib.calcMemo(30) // 832040; less than 1ms
+```
+
 ## Currying
 
 ## Partial Application
