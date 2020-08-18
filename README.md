@@ -51,6 +51,30 @@ addOne()(3) // 4
 
 ## Partial Application
 
+## Lazy Fields
+
+```ts
+class Counter {
+    static usage = 0;
+    constructor(){
+        Counter.usage++;
+    }
+}
+
+class Foo {
+    @lazy
+    get bar(): Counter { return new Counter(); }
+}
+
+const foo = new Foo();
+
+void foo.bar;
+void foo.bar;
+void foo.bar;
+
+Counter.usage // 1
+```
+
 ## Fixed-Point
 
 ## Memoized Fixed-Point
