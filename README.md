@@ -51,6 +51,25 @@ addOne()(3) // 4
 
 ## Partial Application
 
+```ts
+class A {
+    @partial
+    m(a: number, b: number, c: number): number { return a + b + c; }
+}
+
+const a = new A();
+
+a.m(1,2,3) === 6
+a.m(_,2,3)(1) === 6
+a.m(1,_,3)(2) === 6
+a.m(1,2,_)(3) === 6
+a.m(1,_,_)(2,3) === 6
+a.m(_,2,_)(1,3) === 6
+a.m(_,_,3)(1,2) === 6
+a.m(_,_,_)(1,2,3) === 6
+a.m(_,_,_)(_,2,_)(1,3) === 6
+```
+
 ## Lazy Fields
 
 ```ts
