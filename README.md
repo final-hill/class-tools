@@ -1,7 +1,7 @@
 # Class Tools
 
 <!--
-[![Build Status](https://dev.azure.com/thenewobjective/class-tools/_apis/build/status/Build?branchName=master)](https://dev.azure.com/thenewobjective/functional-tools/_build/latest?definitionId=11&branchName=master)
+[![Build Status](https://dev.azure.com/thenewobjective/class-tools/_apis/build/status/Build?branchName=master)](https://dev.azure.com/thenewobjective/class-tools/_build/latest?definitionId=11&branchName=master)
 -->
 
 ## Table of Contents
