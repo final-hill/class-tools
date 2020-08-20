@@ -1,8 +1,6 @@
 # Class Tools
 
-<!--
-[![Build Status](https://dev.azure.com/thenewobjective/class-tools/_apis/build/status/Build?branchName=master)](https://dev.azure.com/thenewobjective/class-tools/_build/latest?definitionId=11&branchName=master)
--->
+![Build](https://github.com/final-hill/class-tools/workflows/Build/badge.svg)
 
 ## Table of Contents
 
