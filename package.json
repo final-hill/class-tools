@@ -1,5 +1,5 @@
 {
-  "name": "functional-tools",
+  "name": "@final-hill/class-tools",
   "version": "0.0.1",
   "description": "Functional Tools provides a number of utility functions and decorators to ease of features commonly found in functional languages",
   "main": "dist/index.js",
@@ -32,9 +32,9 @@
   "author": "Michael L Haufe <tno@thenewobjective.com> (https://thenewobjective.com)",
   "license": "AGPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/final-hill/functional-tools/issues"
+    "url": "https://github.com/final-hill/class-tools/issues"
   },
-  "homepage": "https://github.com/final-hill/functional-tools#readme",
+  "homepage": "https://github.com/final-hill/class-tools#readme",
   "dependencies": {
     "@final-hill/decorator-contracts": "^0.18.1"
   },
@@ -54,7 +54,7 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^26.1.4",
     "ts-loader": "^8.0.2",
-    "typescript": "^3.9.7",
+    "typescript": "^4.0.3",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   }
