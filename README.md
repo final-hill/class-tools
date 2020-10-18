@@ -115,11 +115,9 @@ Counter.usage // 1
 
 ## Fixed-Point
 
-## Memoized Fixed-Point
-
 ## Known Limitations
 
-When using TypeScript a decorator can not change the type of the class feature. This is a [limitation](https://github.com/microsoft/TypeScript/issues/4881) of the language.
+When using TypeScript a decorator can not change the type of the associated class feature. This is a [limitation](https://github.com/microsoft/TypeScript/issues/4881) of the language.
 Depending on your usage you may need to perform explicit casting or utilize the `// @ts-ignore` option. For example:
 
 ```ts
