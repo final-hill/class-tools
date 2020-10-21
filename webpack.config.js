@@ -26,7 +26,7 @@ module.exports = {
   // https://github.com/riversun/making-library-with-webpack#1-4publish-an-export-default-class-with-the-setting-library-name--class-name
   output: {
     filename: 'index.js',
-    library: 'functional-tools',
+    library: 'class-tools',
     libraryExport: 'default',
     libraryTarget: 'umd',
     globalObject: 'this',
