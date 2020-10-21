@@ -7,25 +7,30 @@
 import Contracts from '@final-hill/decorator-contracts';
 import MultiKeyMap from '@final-hill/multi-key-map';
 
-const assert: Contracts['assert'] = new Contracts(true).assert,
-      id = (x: any): any => x;
+const assert: Contracts['assert'] = new Contracts(true).assert;
+
+interface FixParams {
+    /**
+     * The starting point for the iterative ascent. Use a function for a computed bottom
+     */
+    bottom: any | ((...args: any) => any);
+    /**
+     * The iterative limit
+     */
+    limit?: number;
+}
 
 /**
  * Computes the least fixed point of the associated method
  *
- * @param {any | function(...args: any): any} bottom - The starting point for the iterative ascent
- * @param {number} [limit] - The iterative limit
- * @param {function(...args: any): any} [unwrap] - An optional transformation of the return value
+ * @param {FixParams} options - Configuration options
  * @returns {MethodDecorator} - The method decorator
  */
-function fix(bottom: any | ((...args: any) => any), limit=Infinity, unwrap: ((...args: any) => any) = id): MethodDecorator {
-    let bottomValue: any;
-    if(typeof bottom != 'function') {
-        bottomValue = bottom;
-        bottom = (): any => bottomValue;
-    }
-
-    const callChain = new MultiKeyMap(),
+function fix(options: FixParams): MethodDecorator {
+    const limit = options.limit ?? Infinity,
+          bottom = typeof options.bottom != 'function' ? (): any => bottomValue : options.bottom,
+          bottomValue = typeof options.bottom != 'function' ? options.bottom : undefined,
+          callChain = new MultiKeyMap(),
           values = new MultiKeyMap();
 
     return function(
@@ -38,22 +43,24 @@ function fix(bottom: any | ((...args: any) => any), limit=Infinity, unwrap: ((..
             let value;
             if(callChain.size == 0) {
                 values.set(...callee, bottom(...args));
-                for(let i = 0; i < limit && value != values.get(...callee); i++) {
+                for(let i = 0; i < limit && value !== values.get(...callee); i++) {
                     callChain.set(...callee,callee);
                     value = values.get(...callee);
-                    values.set(...callee,unwrap(f.apply(this,args)));
+                    values.set(...callee,f.apply(this,args));
                     callChain.clear();
                 }
 
                 return value;
             }
             if(callChain.has(...callee)) {
-                return values.get(...callee,bottom(...args));
+                return values.get(...callee);
             }
+            values.set(...callee, bottom(...args));
             callChain.set(...callee, callee);
-            value = unwrap(f.apply(this,args));
+            value = f.apply(this,args);
             values.set(...callee,value);
             callChain.delete(...callee);
+            values.delete(...callee);
 
             return value;
         };
@@ -61,10 +68,3 @@ function fix(bottom: any | ((...args: any) => any), limit=Infinity, unwrap: ((..
 }
 
 export default fix;
-
-/*
-
-let fix = f =>
-    (u => f(n => u(u)(n)))
-    (u => f(n => u(u)(n)))
-*/
