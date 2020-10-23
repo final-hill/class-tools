@@ -1,6 +1,8 @@
 # Class Tools
 
-![Build](https://github.com/final-hill/class-tools/workflows/Build/badge.svg)
+[![Build](https://github.com/final-hill/class-tools/workflows/Build/badge.svg?branch=master)](https://github.com/final-hill/class-tools/actions?query=workflow%3ABuild%2FRelease)
+[![npm version](https://badge.fury.io/js/%40final-hill%2Fclass-tools.svg)](https://www.npmjs.com/package/@final-hill/class-tools)
+[![Downloads](https://img.shields.io/npm/dm/@final-hill/class-tools.svg)](https://www.npmjs.com/package/@final-hill/class-tools)
 
 ## Table of Contents
 
@@ -22,9 +24,25 @@ features commonly found in functional languages for use with classes.
 Note that the license for this library is [AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.en.html).
 You should [know what that means](https://choosealicense.com/licenses/agpl-3.0/) before
 using this library. If you would like an exception to this license per section 7
-[contact the author](mailto:michael.haufe@final-hill.com).
+[contact the author](mailto:michael.haufe@final-hill.com?subject=AGPL%20Exception.%20@final-hill/class-tools).
 
 ## Library Installation
+
+As a dependency run the command:
+
+`npm install @final-hill/class-tools`
+
+You can also use a specific version:
+
+`npm install @final-hill/class-tools@1.0.0`
+
+For use in a webpage:
+
+`<script src="https://unpkg.com/@final-hill/class-tools"></script>`
+
+With a specific version:
+
+`<script src="https://unpkg.com/@final-hill/class-tools@1.0.0></script>`
 
 ## Memoization
 
