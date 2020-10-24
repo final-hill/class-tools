@@ -15,6 +15,7 @@
 - [Fixed-Point](#fixed-point)
 - [Memoized Fixed-Point](#memoized-fixed-point)
 - [Known Limitations](#known-limitations)
+- [Further Reading](#further-reading)
 
 ## Introduction
 
@@ -46,6 +47,9 @@ With a specific version:
 
 ## Memoization
 
+The `@memo` decorator [memoizes](https://en.wikipedia.org/wiki/Memoization)
+(caches) the results of the associated method call.
+
 ```ts
 import {memo} from '@final-hill/class-tools';
 
@@ -65,6 +69,9 @@ fib.calcMemo(30) // 832040; less than 1ms
 
 ## Currying
 
+The `@curry` decorator converts the associated method into a method
+that supports [currying](https://en.wikipedia.org/wiki/Currying) the parameters.
+
 ```ts
 import {curry} from '@final-hill/class-tools';
 
@@ -83,6 +90,9 @@ addOne()(3) // 4
 ```
 
 ## Partial Application
+
+The `@partial` decorator converts the associated method into
+one that supports [partial application](https://en.wikipedia.org/wiki/Partial_application) of its parameters
 
 ```ts
 import {partial, _} from '@final-hill/class-tools';
@@ -106,6 +116,11 @@ a.m(_,_,_)(_,2,_)(1,3) === 6
 ```
 
 ## Lazy Fields
+
+The `@lazy` decorator converts the assocated getter into a lazily
+initialized field. Practically this means that the body of the getter
+will only executed once on its first use. Subsequent usages will
+return the cached result of the first call.
 
 ```ts
 import {lazy} from '@final-hill/class-tools';
@@ -133,6 +148,66 @@ Counter.usage // 1
 
 ## Fixed-Point
 
+The `@fix` decorator can be assigned to methods in order to
+control the behavior of its recursion and find its
+least [fixed-point](https://en.wikipedia.org/wiki/Fixed-point_combinator).
+It provides options to limit runaway recursion as well as
+handle self-referential calls while returning a value.
+
+The `bottom` option defines the value to return when the recursive call
+bottoms out. In other words, if the current method has been recursively
+called with the same arguments then it is replaced with the value given.
+
+```ts
+import {fix} from '@final-hill/class-tools';
+
+class Foo {
+    @fix({bottom: 0})
+    bar(): number {
+        return this.bar();
+    }
+}
+
+new Foo().bar() === 0;
+```
+
+Recursive calls may always vary in their arguments leading
+to runaway recursion in a different way. The `limit` option
+prevents infinite recursion by replacing the nth call with
+the value defined by the `bottom` option:
+
+```ts
+import {fix} from '@final-hill/class-tools';
+
+class Foo {
+    @fix({bottom: 0, limit: 10})
+    bar(n: number): number {
+        return 1 + this.bar(n);
+    }
+}
+
+new Foo().bar(0) === 9;
+```
+
+The `bottom` option can also be defined as a function if
+a computed result is desired:
+
+```ts
+import {fix} from '@final-hill/class-tools';
+
+class Foo {
+    @fix({bottom: (n: number) => n**2})
+    bar(n: number): number {
+        if(n <= 3) {
+            return 1 + this.bar(n + 1);
+        } else {
+            return this.bar(n); // bottom(4) == 4**2 == 16
+        }
+    }
+}
+new Foo().bar(0) === 20;
+```
+
 ## Known Limitations
 
 When using TypeScript a decorator can not change the type of the associated class feature. This is a [limitation](https://github.com/microsoft/TypeScript/issues/4881) of the language.
@@ -156,3 +231,14 @@ a.m(1,_,3)(2) === 6
 // @ts-ignore
 a.m(1,2,_)(3) === 6
 ```
+
+## Further Reading
+
+- [Currying](https://en.wikipedia.org/wiki/Currying)
+- [Memoization](https://en.wikipedia.org/wiki/Memoization)
+- [Partial Application](https://en.wikipedia.org/wiki/Partial_application)
+- [Lazy Evaluation](https://en.wikipedia.org/wiki/Lazy_evaluation)
+- [Fixed-point combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator)
+- [Domain Theory - Motivation and intuition](https://en.wikipedia.org/wiki/Domain_theory#Motivation_and_intuition)
+- [Denotational Semantics - Meanings of recursive programs](https://en.wikipedia.org/wiki/Denotational_semantics#Meanings_of_recursive_programs)
+- [Kleene fixed-point theorem](https://en.wikipedia.org/wiki/Kleene_fixed-point_theorem)
