@@ -13,7 +13,6 @@
 - [Partial Application](#partial-application)
 - [Lazy Fields](#lazy-fields)
 - [Fixed-Point](#fixed-point)
-- [Memoized Fixed-Point](#memoized-fixed-point)
 - [Known Limitations](#known-limitations)
 - [Further Reading](#further-reading)
 
