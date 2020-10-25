@@ -6,8 +6,9 @@
  */
 
 import curry from './curry';
+import fix from './fix';
 import lazy from './lazy';
 import memo from './memo';
 import {partial, _} from './partial';
 
-export {curry, lazy, memo, partial, _};
+export {curry, fix, lazy, memo, partial, _};
