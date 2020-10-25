@@ -27,7 +27,7 @@ module.exports = {
   output: {
     filename: 'index.js',
     library: 'class-tools',
-    libraryExport: 'default',
+    libraryExport: '',
     libraryTarget: 'umd',
     globalObject: 'this',
     path: path.resolve(__dirname, 'dist'),
