@@ -55,6 +55,7 @@ describe('@lazy', () => {
         void foo.bar;
         void foo.bar;
 
+        expect(foo.bar).toBeDefined();
         expect(Counter.usage).toBe(1);
 
         Counter.usage = 99;
@@ -63,5 +64,35 @@ describe('@lazy', () => {
         void foo.bar;
 
         expect(Counter.usage).toBe(100);
+    });
+
+    test('@lazy getter only', () => {
+        class Foo {
+            private _leftThunk: () => number;
+            private _rightThunk: () => number;
+
+            constructor(
+                left: () => number,
+                right: () => number
+            ) {
+                this._leftThunk = left;
+                this._rightThunk = right;
+            }
+
+            @lazy
+            get left(): number {
+                return this._leftThunk();
+            }
+
+            @lazy
+            get right(): number {
+                return this._rightThunk();
+            }
+        }
+
+        const alt = new Foo(() => 10, () => 20);
+
+        expect(alt.left).toBe(10);
+        expect(alt.right).toBe(20);
     });
 });

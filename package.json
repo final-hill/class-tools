@@ -1,6 +1,6 @@
 {
   "name": "@final-hill/class-tools",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Class Tools provides a number of utility functions and decorators to ease the use of features commonly found in functional languages",
   "main": "dist/index.js",
   "scripts": {

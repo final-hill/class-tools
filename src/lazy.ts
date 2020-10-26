@@ -39,10 +39,11 @@ function lazy(
     /**
      * The new setter
      * @param {this} this - The target
-     * @param {any} value -
+     * @param {any} value - The value
+     * @returns {any} - The assigned value
      */
     function set(this: typeof target, value: any): any {
-        _private = value;
+        return _private = value;
     }
 
     return { get, set };
