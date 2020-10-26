@@ -91,8 +91,12 @@ describe('@lazy', () => {
         }
 
         const alt = new Foo(() => 10, () => 20);
-
         expect(alt.left).toBe(10);
         expect(alt.right).toBe(20);
+
+        // test internal state of @lazy
+        const alt2 = new Foo(() => 30, () => 40);
+        expect(alt2.left).toBe(30);
+        expect(alt2.right).toBe(40);
     });
 });

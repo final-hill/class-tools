@@ -23,9 +23,8 @@ function lazy(
     assert(descriptor.get != undefined, '@lazy can only be applied to a getter');
     assert(descriptor.set == undefined, 'a setter can not be defined when using @lazy');
 
-    const initializer = descriptor.get;
-
-    let _private: any;
+    const initializer = descriptor.get,
+          _private = new WeakMap();
 
     /**
      * The new getter
@@ -33,7 +32,11 @@ function lazy(
      * @returns {any} -
      */
     function get(this: typeof target): any {
-        return _private ?? set.call(this, initializer.call(this));
+        if(_private.has(this)) {
+            return _private.get(this);
+        } else {
+            return set.call(this, initializer.call(this));
+        }
     }
 
     /**
@@ -43,7 +46,9 @@ function lazy(
      * @returns {any} - The assigned value
      */
     function set(this: typeof target, value: any): any {
-        return _private = value;
+        _private.set(this,value);
+
+        return value;
     }
 
     return { get, set };
