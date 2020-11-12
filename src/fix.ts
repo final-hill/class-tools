@@ -4,10 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
-import Contracts from '@final-hill/decorator-contracts';
 import MultiKeyMap from '@final-hill/multi-key-map';
-
-const assert: Contracts['assert'] = new Contracts(true).assert;
+import assert from './lib/assert';
 
 interface FixParams {
     /**

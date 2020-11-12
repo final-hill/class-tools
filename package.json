@@ -40,7 +40,6 @@
   },
   "homepage": "https://github.com/final-hill/class-tools#readme",
   "dependencies": {
-    "@final-hill/decorator-contracts": "^0.18.1",
     "@final-hill/multi-key-map": "^1.0.1"
   },
   "files": [

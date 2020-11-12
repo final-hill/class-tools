@@ -5,10 +5,9 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Contracts from '@final-hill/decorator-contracts';
+import assert from './lib/assert';
 
-const assert: Contracts['assert'] = new Contracts(true).assert,
-      _ = Symbol('no argument');
+const _ = Symbol('no argument');
 
 /**
  * Converts the associated method into a partially applied method

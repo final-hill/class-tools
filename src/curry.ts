@@ -5,9 +5,7 @@
  * @see <https://spdx.org/licenses/AGPL-3.0-only.html>
  */
 
-import Contracts from '@final-hill/decorator-contracts';
-
-const assert: Contracts['assert'] = new Contracts(true).assert;
+import assert from './lib/assert';
 
 /**
  * Converts the associated method into a curried method
