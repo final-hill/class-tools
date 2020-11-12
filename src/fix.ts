@@ -39,28 +39,27 @@ function fix(options: FixParams): MethodDecorator {
         assert(typeof descriptor.value == 'function' && typeof target == 'object', 'Only a method can have an associated @fix');
         const f = descriptor.value as (...args: any[]) => any;
         descriptor.value = function _fix(...args: any[]): any {
-            const callee = [_fix,...args];
             let value;
             if(callChain.size == 0) {
-                values.set(...callee, bottom(...args));
-                for(let i = 0; i < limit && value !== values.get(...callee); i++) {
-                    callChain.set(...callee,callee);
-                    value = values.get(...callee);
-                    values.set(...callee,f.apply(this,args));
+                values.set(...args, bottom(...args));
+                for(let i = 0; i < limit && value !== values.get(...args); i++) {
+                    callChain.set(...args, _fix);
+                    value = values.get(...args);
+                    values.set(...args,f.apply(this,args));
                     callChain.clear();
                 }
 
                 return value;
             }
-            if(callChain.has(...callee)) {
-                return values.get(...callee);
+            if(callChain.has(...args)) {
+                return values.get(...args);
             }
-            values.set(...callee, bottom(...args));
-            callChain.set(...callee, callee);
+            values.set(...args, bottom(...args));
+            callChain.set(...args, _fix);
             value = f.apply(this,args);
-            values.set(...callee,value);
-            callChain.delete(...callee);
-            values.delete(...callee);
+            values.set(...args,value);
+            callChain.delete(...args);
+            values.delete(...args);
 
             return value;
         };
