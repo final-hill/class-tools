@@ -116,7 +116,7 @@ a.m(_,_,_)(_,2,_)(1,3) === 6
 
 ## Lazy Fields
 
-The `@lazy` decorator converts the assocated getter into a lazily
+The `@lazy` decorator converts the associated getter into a lazily
 initialized field. Practically this means that the body of the getter
 will only executed once on its first use. Subsequent usages will
 return the cached result of the first call.
