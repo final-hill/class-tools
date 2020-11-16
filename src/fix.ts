@@ -55,31 +55,6 @@ function fix(options: FixParams): MethodDecorator {
             visited.clear();
 
             return result;
-            /*
-            let value;
-            if(callChain.size == 0) {
-                values.set(...args, bottom(...args));
-                for(let i = 0; i < limit && value !== values.get(...args); i++) {
-                    callChain.set(...args, _fix);
-                    value = values.get(...args);
-                    values.set(...args,f.apply(this,args));
-                    callChain.clear();
-                }
-
-                return value;
-            }
-            if(callChain.has(...args)) {
-                return values.get(...args);
-            }
-            values.set(...args, bottom(...args));
-            callChain.set(...args, _fix);
-            value = f.apply(this,args);
-            values.set(...args,value);
-            callChain.delete(...args);
-            values.delete(...args);
-
-            return value;
-            */
         };
     };
 }
