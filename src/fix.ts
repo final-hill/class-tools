@@ -28,8 +28,8 @@ function fix(options: FixParams): MethodDecorator {
     const limit = options.limit ?? Infinity,
           bottom = typeof options.bottom != 'function' ? (): any => bottomValue : options.bottom,
           bottomValue = typeof options.bottom != 'function' ? options.bottom : undefined,
-          callChain = new MultiKeyMap(),
-          values = new MultiKeyMap();
+          visited = new MultiKeyMap();
+    let i = 0;
 
     return function(
         target: any, _propertyKey: PropertyKey, descriptor: PropertyDescriptor
@@ -37,6 +37,25 @@ function fix(options: FixParams): MethodDecorator {
         assert(typeof descriptor.value == 'function' && typeof target == 'object', 'Only a method can have an associated @fix');
         const f = descriptor.value as (...args: any[]) => any;
         descriptor.value = function _fix(...args: any[]): any {
+            if(visited.has(...args)) {
+                i = 0;
+            } else {
+                i++;
+                if(i > limit) {
+                    i = 0;
+                    visited.set(...args, bottom(...args));
+                } else {
+                    visited.set(...args, bottom(...args)); // f.apply could recurse unaltered
+                    const value = f.apply(this, args);
+                    visited.set(...args, value);
+                }
+            }
+
+            const result = visited.get(...args);
+            visited.clear();
+
+            return result;
+            /*
             let value;
             if(callChain.size == 0) {
                 values.set(...args, bottom(...args));
@@ -60,6 +79,7 @@ function fix(options: FixParams): MethodDecorator {
             values.delete(...args);
 
             return value;
+            */
         };
     };
 }

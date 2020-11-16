@@ -35,10 +35,10 @@ describe('@fix', () => {
         class Foo {
             @fix({bottom: 0, limit: 10})
             bar(n: number): number {
-                return 1 + this.bar(n);
+                return 1 + this.bar(n + 1);
             }
         }
-        expect(new Foo().bar(0)).toBe(9);
+        expect(new Foo().bar(0)).toBe(10);
     });
 
     test('Deeper Recursion', () => {
@@ -67,5 +67,60 @@ describe('@fix', () => {
             }
         }
         expect(new Foo().bar(0)).toBe(20);
+    });
+
+    test('Balanced Parens test', () => {
+        abstract class Parser {}
+        class Empty extends Parser {
+            toString(): string { return 'ε'; }
+        }
+        class Char extends Parser {
+            constructor(
+                readonly value: string
+            ){ super(); }
+
+            toString(): string { return `'${this.value}'`; }
+        }
+        class Alt extends Parser {
+            constructor(
+                readonly left: () => Parser,
+                readonly right: () => Parser
+            ) { super(); }
+
+            @fix({bottom: '@Alt'})
+            toString(): string {
+                return `${this.left()} | ${this.right()}`;
+            }
+        }
+        class Cat extends Parser {
+            constructor(
+                readonly first: () => Parser,
+                readonly second: () => Parser
+            ){ super(); }
+
+            @fix({bottom: '@Cat'})
+            toString(): string {
+                return `${this.first()}.${this.second()}`;
+            }
+        }
+
+        // s = s ( s ) | ε
+        const s: Parser = new Alt(
+            () => new Cat(
+                    () => s,
+                    () => new Cat(
+                        () => new Char('('),
+                        () => new Cat(
+                            () => s,
+                            () => new Char(')')
+                        )
+                    )
+                ),
+            () => new Empty()
+        );
+
+        // TODO: want deeper structure
+        // @Alt.'('.@Alt.')' | ε
+        expect(s.toString()).toBe('@Alt.@Cat | ε');
     });
 });

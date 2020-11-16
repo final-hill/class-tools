@@ -181,11 +181,11 @@ import {fix} from '@final-hill/class-tools';
 class Foo {
     @fix({bottom: 0, limit: 10})
     bar(n: number): number {
-        return 1 + this.bar(n);
+        return 1 + this.bar(n + 1);
     }
 }
 
-new Foo().bar(0) === 9;
+new Foo().bar(0) === 10;
 ```
 
 The `bottom` option can also be defined as a function if
